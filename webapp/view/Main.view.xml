@@ -1,0 +1,440 @@
+<mvc:View
+    controllerName="claro.com.gestionproveedores.controller.Main"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <Page
+        id="mainPage"
+        title="{i18n>mainTitle}"
+        showNavButton="false">
+
+        <subHeader>
+            <Toolbar>
+                <ToolbarSpacer/>
+                <Label text="Rol actual:" class="sapUiSmallMarginEnd" design="Bold"/>
+                <Select
+                    id="rolSelect"
+                    selectedKey="{appView>/rol}"
+                    change=".onRolChange"
+                    width="13rem">
+                    <core:Item key="solicitante" text="Rol Solicitante"/>
+                    <core:Item key="aprobador" text="Rol Aprobador"/>
+                </Select>
+            </Toolbar>
+        </subHeader>
+
+        <content>
+
+            <!-- ══ KPI STRIP ════════════════════════════════════════════════ -->
+            <FlexBox
+                wrap="Wrap"
+                alignItems="Stretch"
+                class="claro-kpi-bar">
+
+                <VBox class="claro-kpi-tile" alignItems="Center" justifyContent="Center">
+                    <core:Icon src="sap-icon://supplier" size="1.5rem" color="Information" class="sapUiTinyMarginBottom"/>
+                    <Text text="{viewModel>/totalProveedores}" class="claro-kpi-number claro-kpi-brand"/>
+                    <Label text="Total Proveedores" class="claro-kpi-caption"/>
+                </VBox>
+
+                <VBox class="claro-kpi-tile" alignItems="Center" justifyContent="Center">
+                    <core:Icon src="sap-icon://person-placeholder" size="1.5rem" color="Positive" class="sapUiTinyMarginBottom"/>
+                    <Text text="{viewModel>/totalNaturales}" class="claro-kpi-number claro-kpi-positive"/>
+                    <Label text="Personas Naturales" class="claro-kpi-caption"/>
+                </VBox>
+
+                <VBox class="claro-kpi-tile" alignItems="Center" justifyContent="Center">
+                    <core:Icon src="sap-icon://building" size="1.5rem" color="Information" class="sapUiTinyMarginBottom"/>
+                    <Text text="{viewModel>/totalJuridicas}" class="claro-kpi-number claro-kpi-info"/>
+                    <Label text="Personas Jurídicas" class="claro-kpi-caption"/>
+                </VBox>
+
+                <VBox class="claro-kpi-tile" alignItems="Center" justifyContent="Center">
+                    <core:Icon src="sap-icon://locked" size="1.5rem" color="Negative" class="sapUiTinyMarginBottom"/>
+                    <Text text="{viewModel>/totalBloqueados}" class="claro-kpi-number claro-kpi-negative"/>
+                    <Label text="Bloqueados" class="claro-kpi-caption"/>
+                </VBox>
+
+            </FlexBox>
+
+            <!-- ══ TABS ═══════════════════════════════════════════════════════ -->
+            <IconTabBar
+                id="reportTabBar"
+                select=".onReportTabSelect"
+                stretchContentHeight="false"
+                class="sapUiResponsiveMargin">
+
+                <items>
+
+                    <!-- ══════════════════════════════════════════════════════
+                         TAB 1: PERSONA NATURAL
+                         ══════════════════════════════════════════════════════ -->
+                    <IconTabFilter
+                        id="naturalTab"
+                        key="naturalTab"
+                        iconColor="Positive"
+                        text="Persona Natural"
+                        count="{viewModel>/naturalTotalRecords}">
+
+                        <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+
+                            <!-- ── FILTROS ── -->
+                            <Panel
+                                expandable="true"
+                                expanded="true"
+                                headerText="{i18n>filtrar}"
+                                class="sapUiMediumMarginBottom">
+
+                                <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                                    <l:Grid
+                                        defaultSpan="L4 M6 S12"
+                                        hSpacing="1"
+                                        vSpacing="0.5"
+                                        width="100%">
+
+                                        <!-- Fila 1 -->
+                                        <VBox>
+                                            <Label text="{i18n>apellidos}" labelFor="naturalApellidosInput"/>
+                                            <Input id="naturalApellidosInput" placeholder="{i18n>apellidos}" value="{viewModel>/naturalFilters/apellidos}" width="100%"/>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text="{i18n>codigoSAP}" labelFor="naturalCodigoSAPInput"/>
+                                            <Input id="naturalCodigoSAPInput" placeholder="{i18n>codigoSAP}" value="{viewModel>/naturalFilters/codigoSAP}" width="100%"/>
+                                        </VBox>
+
+                                        <VBox justifyContent="End">
+                                            <Label text=" "/>
+                                            <Button text="{i18n>limpiarFiltros}" press=".onClearNaturalFilters" type="Default" icon="sap-icon://clear-all" width="100%"/>
+                                        </VBox>
+
+                                        <!-- Fila 2 -->
+                                        <VBox>
+                                            <Label text="{i18n>tipoDocumento}" labelFor="naturalTipoDocMultiCombo"/>
+                                            <MultiComboBox id="naturalTipoDocMultiCombo" selectedKeys="{viewModel>/naturalFilters/tipoDocumento}" width="100%" items="{catalogs>/tipoDocumento}">
+                                                <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                            </MultiComboBox>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text="{i18n>nroDoc}" labelFor="naturalNroDocInput"/>
+                                            <Input id="naturalNroDocInput" placeholder="{i18n>nroDoc}" value="{viewModel>/naturalFilters/nroDoc}" width="100%"/>
+                                        </VBox>
+
+                                        <VBox justifyContent="End">
+                                            <Label text=" "/>
+                                            <Button text="{i18n>filtrar}" press=".onFilterNatural" type="Emphasized" icon="sap-icon://search" width="100%"/>
+                                        </VBox>
+
+                                    </l:Grid>
+                                </VBox>
+                            </Panel>
+
+                            <!-- ── BARRA DE TÍTULO Y ACCIONES ── -->
+                            <OverflowToolbar>
+                                <Title text="{= 'Personas Naturales (' + ${viewModel>/naturalTotalRecords} + ')'}" level="H4" titleStyle="H4"/>
+                                <ToolbarSpacer/>
+                                <Button text="Nueva Persona Natural" press=".onNewNatural" icon="sap-icon://add" type="Emphasized"/>
+                                <Button text="{i18n>exportar}" press=".onExportNatural" icon="sap-icon://excel-attachment" type="Transparent"/>
+                            </OverflowToolbar>
+
+                            <!-- ── TABLA DESKTOP: PERSONAS NATURALES ── -->
+                            <Table
+                                id="naturalTable"
+                                items="{path: 'viewModel>/naturalData'}"
+                                mode="None"
+                                fixedLayout="true"
+                                showSeparators="All"
+                                sticky="ColumnHeaders"
+                                noDataText="No se encontraron personas naturales con los filtros aplicados"
+                                class="claro-grid-table claro-desktop-only claro-scrollable-table">
+                                <columns>
+                                    <Column><Text text="Proveedor"/></Column>
+                                    <Column><Text text="{i18n>nroDoc}"/></Column>
+                                    <Column><Text text="{i18n>tipoDocumento}"/></Column>
+                                    <Column><Text text="{i18n>telefono}"/></Column>
+                                    <Column><Text text="{i18n>codigoSAP}"/></Column>
+                                    <Column hAlign="Center"><Text text="Estado"/></Column>
+                                    <Column hAlign="Center"><Text text="{i18n>acciones}"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier
+                                                title="{= ${viewModel>nombres} + ' ' + ${viewModel>apellidoPaterno} + ' ' + ${viewModel>apellidoMaterno}}"
+                                                text="{viewModel>email}"/>
+                                            <Text text="{viewModel>nroDoc}" wrapping="false"/>
+                                            <Text text="{viewModel>tipoDocumento}" wrapping="false"/>
+                                            <Text text="{viewModel>telefono}" wrapping="false"/>
+                                            <Text text="{viewModel>codigoSAP}" wrapping="false"/>
+                                            <ObjectStatus
+                                                text="{viewModel>estadoContribuyente}"
+                                                state="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'Success' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'Warning' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'Error' : 'None'))}"
+                                                icon="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'sap-icon://supplier' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'sap-icon://pause' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'sap-icon://locked' : 'sap-icon://pending'))}"/>
+                                            <HBox justifyContent="Center">
+                                                <Button icon="sap-icon://edit" tooltip="{i18n>editar}" press=".onEditNatural" type="Transparent"/>
+                                                <Button icon="sap-icon://delete" tooltip="{i18n>eliminar}" press=".onDeleteNatural" type="Transparent"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
+                            <!-- ── LISTA MOBILE: PERSONAS NATURALES ── -->
+                            <List
+                                id="naturalList"
+                                items="{path: 'viewModel>/naturalData'}"
+                                mode="None"
+                                showSeparators="Inner"
+                                noDataText="No se encontraron personas naturales con los filtros aplicados"
+                                class="claro-master-list claro-mobile-only">
+                                <items>
+                                    <CustomListItem
+                                        highlight="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'Success' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'Warning' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'Error' : 'Information'))}">
+                                        <content>
+                                            <HBox class="claro-mobile-card" alignItems="Stretch">
+                                                <!-- Columna izquierda: datos -->
+                                                <VBox class="claro-mobile-card-body">
+                                                    <Text text="{= ${viewModel>nombres} + ' ' + ${viewModel>apellidoPaterno} + ' ' + ${viewModel>apellidoMaterno}}" class="claro-mobile-card-title"/>
+                                                    <Text text="{= 'Correo: ' + (${viewModel>email} || '-')}" class="claro-mobile-meta sapUiTinyMarginTop"/>
+                                                    <Text text="{= 'C\u00f3digo SAP: ' + (${viewModel>codigoSAP} || '(pendiente)')}" class="claro-mobile-meta"/>
+                                                    <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                                        <Label text="Estado:" class="claro-mobile-inline-label"/>
+                                                        <ObjectStatus
+                                                            text="{viewModel>estadoContribuyente}"
+                                                            state="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'Success' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'Warning' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'Error' : 'None'))}"
+                                                            icon="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'sap-icon://supplier' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'sap-icon://pause' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'sap-icon://locked' : 'sap-icon://pending'))}"/>
+                                                    </HBox>
+                                                </VBox>
+                                                <!-- Columna derecha: acciones -->
+                                                <VBox justifyContent="End" alignItems="End" class="claro-mobile-card-actions">
+                                                    <Button icon="sap-icon://edit" tooltip="Editar" press=".onEditNatural" type="Transparent"/>
+                                                    <Button icon="sap-icon://delete" tooltip="Eliminar" press=".onDeleteNatural" type="Transparent"/>
+                                                </VBox>
+                                            </HBox>
+                                        </content>
+                                    </CustomListItem>
+                                </items>
+                            </List>
+
+                            <!-- ── PAGINACIÓN NATURAL ── -->
+                            <Toolbar class="sapUiSmallMarginTop sapUiMediumMarginBottom claro-pagination-bar">
+                                <Button icon="sap-icon://close-command-field" tooltip="{i18n>primeraPagina}" press=".onNaturalFirstPage" type="Transparent" enabled="{= ${viewModel>/naturalCurrentPage} > 1}"/>
+                                <Button icon="sap-icon://navigation-left-arrow" tooltip="{i18n>paginaAnterior}" press=".onNaturalPrevPage" type="Transparent" enabled="{= ${viewModel>/naturalCurrentPage} > 1}"/>
+                                <ToolbarSpacer/>
+                                <Text text="{= 'Página ' + ${viewModel>/naturalCurrentPage} + ' de ' + ${viewModel>/naturalTotalPages} + '  |  ' + ${viewModel>/naturalTotalRecords} + ' registros'}" class="sapUiSmallMarginBeginEnd"/>
+                                <ToolbarSpacer/>
+                                <Button icon="sap-icon://navigation-right-arrow" tooltip="{i18n>paginaSiguiente}" press=".onNaturalNextPage" type="Transparent" enabled="{= ${viewModel>/naturalCurrentPage} &lt; ${viewModel>/naturalTotalPages}}"/>
+                                <Button icon="sap-icon://open-command-field" tooltip="{i18n>ultimaPagina}" press=".onNaturalLastPage" type="Transparent" enabled="{= ${viewModel>/naturalCurrentPage} &lt; ${viewModel>/naturalTotalPages}}"/>
+                            </Toolbar>
+
+                        </VBox>
+
+                    </IconTabFilter>
+
+                    <!-- ══════════════════════════════════════════════════════
+                         TAB 2: PERSONA JURÍDICA
+                         ══════════════════════════════════════════════════════ -->
+                    <IconTabFilter
+                        id="juridicaTab"
+                        key="juridicaTab"
+                        iconColor="Information"
+                        text="Persona Jurídica"
+                        count="{viewModel>/juridicaTotalRecords}">
+
+                        <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginBottom">
+
+                            <!-- ── ALERTA BLOQUEADOS ── -->
+                            <MessageStrip
+                                text="{= 'Atención: hay ' + ${viewModel>/totalBloqueados} + ' proveedores bloqueados que requieren revisión.'}"
+                                type="Warning"
+                                showIcon="true"
+                                showCloseButton="true"
+                                visible="{= ${viewModel>/totalBloqueados} > 0}"
+                                class="sapUiSmallMarginBottom"/>
+
+                            <!-- ── FILTROS ── -->
+                            <Panel
+                                expandable="true"
+                                expanded="true"
+                                headerText="{i18n>filtrar}"
+                                class="sapUiMediumMarginBottom">
+
+                                <VBox class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom">
+                                    <l:Grid
+                                        defaultSpan="L4 M6 S12"
+                                        hSpacing="1"
+                                        vSpacing="0.5"
+                                        width="100%">
+
+                                        <!-- Fila 1 -->
+                                        <VBox>
+                                            <Label text="{i18n>razonSocial}" labelFor="juridicaRazonSocialInput"/>
+                                            <Input id="juridicaRazonSocialInput" placeholder="{i18n>razonSocial}" value="{viewModel>/juridicaFilters/razonSocial}" width="100%"/>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text="{i18n>nacionalidad}" labelFor="juridicaNacionalidadMultiCombo"/>
+                                            <MultiComboBox id="juridicaNacionalidadMultiCombo" selectedKeys="{viewModel>/juridicaFilters/nacionalidad}" width="100%" items="{catalogs>/nacionalidad}">
+                                                <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                            </MultiComboBox>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text="{i18n>tipoDocumento}" labelFor="juridicaTipoDocMultiCombo"/>
+                                            <MultiComboBox id="juridicaTipoDocMultiCombo" selectedKeys="{viewModel>/juridicaFilters/tipoDocumento}" width="100%" items="{catalogs>/tipoDocumento}">
+                                                <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                            </MultiComboBox>
+                                        </VBox>
+
+                                        <!-- Fila 2 -->
+                                        <VBox>
+                                            <Label text="{i18n>tipoEmpresa}" labelFor="juridicaTipoEmpresaMultiCombo"/>
+                                            <MultiComboBox id="juridicaTipoEmpresaMultiCombo" selectedKeys="{viewModel>/juridicaFilters/tipoEmpresa}" width="100%" items="{catalogs>/tipoEmpresa}">
+                                                <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                            </MultiComboBox>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text="{i18n>claseEmpresa}" labelFor="juridicaClaseEmpresaMultiCombo"/>
+                                            <MultiComboBox id="juridicaClaseEmpresaMultiCombo" selectedKeys="{viewModel>/juridicaFilters/claseEmpresa}" width="100%" items="{catalogs>/claseEmpresa}">
+                                                <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                            </MultiComboBox>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text="{i18n>nroDoc}" labelFor="juridicaNroDocInput"/>
+                                            <Input id="juridicaNroDocInput" placeholder="{i18n>nroDoc}" value="{viewModel>/juridicaFilters/nroDoc}" width="100%"/>
+                                        </VBox>
+
+                                        <!-- Fila 3 -->
+                                        <VBox>
+                                            <Label text="{i18n>codigoSAP}" labelFor="juridicaCodigoSAPInput"/>
+                                            <Input id="juridicaCodigoSAPInput" placeholder="{i18n>codigoSAP}" value="{viewModel>/juridicaFilters/codigoSAP}" width="100%"/>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text=" "/>
+                                            <Button text="{i18n>limpiarFiltros}" press=".onClearJuridicaFilters" type="Default" icon="sap-icon://clear-all" width="100%"/>
+                                        </VBox>
+
+                                        <VBox>
+                                            <Label text=" "/>
+                                            <Button text="{i18n>filtrar}" press=".onFilterJuridica" type="Emphasized" icon="sap-icon://search" width="100%"/>
+                                        </VBox>
+
+                                    </l:Grid>
+                                </VBox>
+                            </Panel>
+
+                            <!-- ── BARRA DE TÍTULO Y ACCIONES ── -->
+                            <OverflowToolbar>
+                                <Title text="{= 'Personas Jurídicas (' + ${viewModel>/juridicaTotalRecords} + ')'}" level="H4" titleStyle="H4"/>
+                                <ToolbarSpacer/>
+                                <Button text="Nueva Persona Jurídica" press=".onNewJuridica" icon="sap-icon://add" type="Emphasized"/>
+                                <Button text="{i18n>exportar}" press=".onExportJuridica" icon="sap-icon://excel-attachment" type="Transparent"/>
+                            </OverflowToolbar>
+
+                            <!-- ── TABLA DESKTOP: PERSONAS JURÍDICAS ── -->
+                            <Table
+                                id="juridicaTable"
+                                items="{path: 'viewModel>/juridicaData'}"
+                                mode="None"
+                                fixedLayout="true"
+                                showSeparators="All"
+                                sticky="ColumnHeaders"
+                                noDataText="No se encontraron personas jurídicas con los filtros aplicados"
+                                class="claro-grid-table claro-desktop-only claro-scrollable-table">
+                                <columns>
+                                    <Column><Text text="Empresa"/></Column>
+                                    <Column><Text text="{i18n>nroDoc}"/></Column>
+                                    <Column><Text text="{i18n>tipoDocumento}"/></Column>
+                                    <Column><Text text="{i18n>codigoSAP}"/></Column>
+                                    <Column hAlign="Center"><Text text="Estado"/></Column>
+                                    <Column hAlign="Center"><Text text="{i18n>acciones}"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier
+                                                title="{viewModel>razonSocial}"
+                                                text="{viewModel>alias}"/>
+                                            <Text text="{viewModel>nroDoc}" wrapping="false"/>
+                                            <Text text="{viewModel>tipoDocumento}" wrapping="false"/>
+                                            <Text text="{viewModel>codigoSAP}" wrapping="false"/>
+                                            <ObjectStatus
+                                                text="{viewModel>estadoContribuyente}"
+                                                state="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'Success' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'Warning' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'Error' : 'None'))}"
+                                                icon="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'sap-icon://supplier' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'sap-icon://pause' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'sap-icon://locked' : 'sap-icon://pending'))}"/>
+                                            <HBox justifyContent="Center">
+                                                <Button icon="sap-icon://edit" tooltip="{i18n>editar}" press=".onEditJuridica" type="Transparent"/>
+                                                <Button icon="sap-icon://delete" tooltip="{i18n>eliminar}" press=".onDeleteJuridica" type="Transparent"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
+                            <!-- ── LISTA MOBILE: PERSONAS JURÍDICAS ── -->
+                            <List
+                                id="juridicaList"
+                                items="{path: 'viewModel>/juridicaData'}"
+                                mode="None"
+                                showSeparators="Inner"
+                                noDataText="No se encontraron personas jurídicas con los filtros aplicados"
+                                class="claro-master-list claro-mobile-only">
+                                <items>
+                                    <CustomListItem
+                                        highlight="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'Success' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'Warning' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'Error' : 'Information'))}">
+                                        <content>
+                                            <HBox class="claro-mobile-card" alignItems="Stretch">
+                                                <!-- Columna izquierda: datos -->
+                                                <VBox class="claro-mobile-card-body">
+                                                    <Text text="{viewModel>razonSocial}" class="claro-mobile-card-title"/>
+                                                    <Text text="{= 'Alias: ' + (${viewModel>alias} || '-')}" class="claro-mobile-meta sapUiTinyMarginTop"/>
+                                                    <Text text="{= 'C\u00f3digo SAP: ' + (${viewModel>codigoSAP} || '(pendiente)')}" class="claro-mobile-meta"/>
+                                                    <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                                        <Label text="Estado:" class="claro-mobile-inline-label"/>
+                                                        <ObjectStatus
+                                                            text="{viewModel>estadoContribuyente}"
+                                                            state="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'Success' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'Warning' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'Error' : 'None'))}"
+                                                            icon="{= ${viewModel>estadoContribuyente} === 'Activo' ? 'sap-icon://supplier' : (${viewModel>estadoContribuyente} === 'Suspendido' ? 'sap-icon://pause' : (${viewModel>estadoContribuyente} === 'Bloqueado' ? 'sap-icon://locked' : 'sap-icon://pending'))}"/>
+                                                    </HBox>
+                                                </VBox>
+                                                <!-- Columna derecha: acciones -->
+                                                <VBox justifyContent="End" alignItems="End" class="claro-mobile-card-actions">
+                                                    <Button icon="sap-icon://edit" tooltip="Editar" press=".onEditJuridica" type="Transparent"/>
+                                                    <Button icon="sap-icon://delete" tooltip="Eliminar" press=".onDeleteJuridica" type="Transparent"/>
+                                                </VBox>
+                                            </HBox>
+                                        </content>
+                                    </CustomListItem>
+                                </items>
+                            </List>
+
+                            <!-- ── PAGINACIÓN JURÍDICA ── -->
+                            <Toolbar class="sapUiSmallMarginTop sapUiMediumMarginBottom claro-pagination-bar">
+                                <Button icon="sap-icon://close-command-field" tooltip="{i18n>primeraPagina}" press=".onJuridicaFirstPage" type="Transparent" enabled="{= ${viewModel>/juridicaCurrentPage} > 1}"/>
+                                <Button icon="sap-icon://navigation-left-arrow" tooltip="{i18n>paginaAnterior}" press=".onJuridicaPrevPage" type="Transparent" enabled="{= ${viewModel>/juridicaCurrentPage} > 1}"/>
+                                <ToolbarSpacer/>
+                                <Text text="{= 'Página ' + ${viewModel>/juridicaCurrentPage} + ' de ' + ${viewModel>/juridicaTotalPages} + '  |  ' + ${viewModel>/juridicaTotalRecords} + ' registros'}" class="sapUiSmallMarginBeginEnd"/>
+                                <ToolbarSpacer/>
+                                <Button icon="sap-icon://navigation-right-arrow" tooltip="{i18n>paginaSiguiente}" press=".onJuridicaNextPage" type="Transparent" enabled="{= ${viewModel>/juridicaCurrentPage} &lt; ${viewModel>/juridicaTotalPages}}"/>
+                                <Button icon="sap-icon://open-command-field" tooltip="{i18n>ultimaPagina}" press=".onJuridicaLastPage" type="Transparent" enabled="{= ${viewModel>/juridicaCurrentPage} &lt; ${viewModel>/juridicaTotalPages}}"/>
+                            </Toolbar>
+
+                        </VBox>
+
+                    </IconTabFilter>
+
+                </items>
+
+            </IconTabBar>
+        </content>
+
+    </Page>
+
+</mvc:View>

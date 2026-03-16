@@ -1,0 +1,490 @@
+﻿<mvc:View
+    controllerName="claro.com.gestionproveedores.controller.SupplierDetail"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:uxap="sap.uxap"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <uxap:ObjectPageLayout
+        id="supplierDetailPage"
+        showTitleInHeaderContent="true"
+        upperCaseAnchorBar="false"
+        preserveHeaderStateOnScroll="true"
+        busy="{viewModel>/busy}"
+        busyIndicatorDelay="0">
+
+        <uxap:headerTitle>
+            <uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:expandedHeading>
+                    <Title text="{viewModel>/pageTitle}" wrapping="true"/>
+                </uxap:expandedHeading>
+                <uxap:snappedHeading>
+                    <FlexBox alignItems="Center">
+                        <Title text="{viewModel>/pageTitle}" wrapping="true"/>
+                    </FlexBox>
+                </uxap:snappedHeading>
+                <uxap:actions>
+                    <Button text="Registrar en SAP" type="Accept" icon="sap-icon://accept"
+                        press=".onRegistrarEnSAP"
+                        visible="{viewModel>/esAprobador}"
+                        enabled="{= !${viewModel>/supplier/codigoSAP} }"/>
+                    <Button text="{i18n>guardar}" type="Emphasized" press=".onSave"
+                        visible="{= ${viewModel>/mode} !== 'display' }"/>
+                    <Button text="{i18n>editar}" type="Emphasized" press=".onEdit"
+                        visible="{= ${viewModel>/mode} === 'display' }"/>
+                    <Button text="{i18n>cancelar}" press=".onCancel"/>
+                </uxap:actions>
+            </uxap:ObjectPageDynamicHeaderTitle>
+        </uxap:headerTitle>
+
+        <!-- ── CABECERA: Avatar + KPIs ── -->
+        <uxap:headerContent>
+            <FlexBox alignItems="Stretch" wrap="Wrap" class="sapUiSmallMarginBottom">
+
+                <!-- Avatar + Grupo 1 siempre juntos (no se separan en mobile) -->
+                <HBox alignItems="Center" class="sapUiMediumMarginEnd claro-header-main-block">
+                    <!-- Avatar -->
+                    <Avatar
+                        initials="{viewModel>/supplierInitials}"
+                        displaySize="XL"
+                        backgroundColor="Accent6"
+                        class="sapUiMediumMarginEnd"
+                        displayShape="Square"/>
+
+                    <!-- Grupo 1: Identificación -->
+                    <VBox justifyContent="Center">
+                        <Title text="{= ${viewModel>/supplierType} === 'natural' ? (${viewModel>/supplier/beneficiario} + ' ' + ${viewModel>/supplier/apellidoPaterno} + ' ' + ${viewModel>/supplier/apellidoMaterno}) : ${viewModel>/supplier/razonSocial} }" level="H4" class="sapUiTinyMarginBottom"/>
+                        <ObjectAttribute title="Código SAP" text="{= ${viewModel>/supplier/codigoSAP} || '(pendiente registro)' }" class="sapUiTinyMarginBottom"/>
+                        <ObjectAttribute title="Razón Social" text="{viewModel>/supplier/razonSocial}" class="sapUiTinyMarginBottom" visible="{= ${viewModel>/supplierType} === 'juridica' }"/>
+                        <ObjectAttribute title="Alias"        text="{viewModel>/supplier/alias}"       visible="{= ${viewModel>/supplierType} === 'juridica' }"/>
+                        <ObjectAttribute title="Nombres"      text="{viewModel>/supplier/beneficiario}" class="sapUiTinyMarginBottom" visible="{= ${viewModel>/supplierType} === 'natural' }"/>
+                        <ObjectAttribute title="Apellidos"    text="{= ${viewModel>/supplier/apellidoPaterno} + ' ' + ${viewModel>/supplier/apellidoMaterno} }" visible="{= ${viewModel>/supplierType} === 'natural' }"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Separador -->
+                <VBox class="sapUiMediumMarginEnd claro-header-separator claro-desktop-only"/>
+                <VBox justifyContent="Center" class="sapUiMediumMarginEnd claro-desktop-only">
+                    <Label text="Contacto" design="Bold" class="sapUiTinyMarginBottom"/>
+                    <ObjectAttribute title="Email"    text="{viewModel>/supplier/email}"   class="sapUiTinyMarginBottom"/>
+                    <ObjectAttribute title="Teléfono" text="{viewModel>/supplier/telefono}"/>
+                </VBox>
+
+                <!-- Separador -->
+                <VBox class="sapUiMediumMarginEnd claro-header-separator claro-desktop-only"/>
+
+                <!-- Grupo 3: Estado -->
+                <VBox justifyContent="Center" class="claro-desktop-only">
+                    <Label text="Estado" design="Bold" class="sapUiTinyMarginBottom"/>
+                    <ObjectStatus
+                        text="{viewModel>/supplier/estadoContribuyente}"
+                        state="{= ${viewModel>/supplier/estadoContribuyente} === 'Activo' ? 'Success' : (${viewModel>/supplier/estadoContribuyente} === 'Suspendido' ? 'Warning' : (${viewModel>/supplier/estadoContribuyente} === 'Bloqueado' ? 'Error' : 'None')) }"
+                        icon="{= ${viewModel>/supplier/estadoContribuyente} === 'Activo' ? 'sap-icon://supplier' : (${viewModel>/supplier/estadoContribuyente} === 'Suspendido' ? 'sap-icon://pause' : (${viewModel>/supplier/estadoContribuyente} === 'Bloqueado' ? 'sap-icon://locked' : 'sap-icon://pending')) }"
+                        inverted="true"
+                        class="sapUiSmallMarginBottom"/>
+                    <ObjectAttribute title="Clasificador" text="{viewModel>/clasificadorText}"/>
+                </VBox>
+
+            </FlexBox>
+        </uxap:headerContent>
+
+        <uxap:sections>
+
+            <!-- ════════════════════════════════════════════
+                 SECCIÓN 1: Identificación y Contacto
+            ════════════════════════════════════════════ -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{i18n>seccionIdentificacion}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <l:Grid defaultSpan="L4 M6 S12" hSpacing="1" vSpacing="0.5" width="100%">
+
+                                <!-- PERSONA NATURAL -->
+                                <VBox visible="{= ${viewModel>/supplierType} === 'natural' }">
+                                    <Label text="{i18n>nombres}" required="true"/>
+                                    <Input value="{viewModel>/supplier/beneficiario}"
+                                        valueState="{viewModel>/fieldStates/beneficiario}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox visible="{= ${viewModel>/supplierType} === 'natural' }">
+                                    <Label text="{i18n>apellidoPaterno}" required="true"/>
+                                    <Input value="{viewModel>/supplier/apellidoPaterno}"
+                                        valueState="{viewModel>/fieldStates/apellidoPaterno}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox visible="{= ${viewModel>/supplierType} === 'natural' }">
+                                    <Label text="{i18n>apellidoMaterno}" required="true"/>
+                                    <Input value="{viewModel>/supplier/apellidoMaterno}"
+                                        valueState="{viewModel>/fieldStates/apellidoMaterno}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+
+                                <!-- PERSONA JURÍDICA -->
+                                <VBox visible="{= ${viewModel>/supplierType} === 'juridica' }">
+                                    <Label text="{i18n>razonSocial}" required="true"/>
+                                    <Input value="{viewModel>/supplier/razonSocial}"
+                                        valueState="{viewModel>/fieldStates/razonSocial}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox visible="{= ${viewModel>/supplierType} === 'juridica' }">
+                                    <Label text="{i18n>alias}" required="true"/>
+                                    <Input value="{viewModel>/supplier/alias}"
+                                        valueState="{viewModel>/fieldStates/alias}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox visible="{= ${viewModel>/supplierType} === 'juridica' }">
+                                    <Label text="{i18n>tipoEmpresa}"/>
+                                    <Select selectedKey="{viewModel>/supplier/tipoEmpresa}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/tipoEmpresa}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+
+                                <!-- COMUNES -->
+                                <VBox>
+                                    <Label text="{i18n>telefono}"/>
+                                    <Input value="{viewModel>/supplier/telefono}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>email}"/>
+                                    <Input value="{viewModel>/supplier/email}" type="Email"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>codigoSAP}"/>
+                                    <Input value="{viewModel>/supplier/codigoSAP}" editable="false" width="100%"/>
+                                </VBox>
+
+                                <!-- Solo Jurídica -->
+                                <VBox visible="{= ${viewModel>/supplierType} === 'juridica' }">
+                                    <Label text="{i18n>claseEmpresa}"/>
+                                    <Select selectedKey="{viewModel>/supplier/claseEmpresa}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/claseEmpresa}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox visible="{= ${viewModel>/supplierType} === 'juridica' }">
+                                    <Label text="{i18n>beneficiario}"/>
+                                    <Input value="{viewModel>/supplier/beneficiario}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox visible="{= ${viewModel>/supplierType} === 'juridica' }">
+                                    <Label text="{i18n>bloqueoProveedor}"/>
+                                    <CheckBox selected="{viewModel>/supplier/bloqueado}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"/>
+                                </VBox>
+
+                            </l:Grid>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- ════════════════════════════════════════════
+                 SECCIÓN 2: Domicilio y Datos Contables
+            ════════════════════════════════════════════ -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{i18n>seccionDomicilioContable}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <l:Grid defaultSpan="L4 M6 S12" hSpacing="1" vSpacing="0.5" width="100%">
+
+                                <VBox>
+                                    <Label text="{i18n>direccion}"/>
+                                    <Input value="{viewModel>/supplier/direccion}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>nacionalidad}"/>
+                                    <Select id="nacionalidadSelect"
+                                        selectedKey="{viewModel>/supplier/nacionalidad}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/nacionalidad}" width="100%"
+                                        change=".onNacionalidadChange">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>departamento}"/>
+                                    <Select selectedKey="{viewModel>/supplier/departamento}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/departamento}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox>
+                                    <Label text="{i18n>provincia}"/>
+                                    <Select selectedKey="{viewModel>/supplier/provincia}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/provincia}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>distrito}"/>
+                                    <Select selectedKey="{viewModel>/supplier/distrito}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/distrito}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>grupoTesoreria}"/>
+                                    <Select selectedKey="{viewModel>/supplier/grupoTesoreria}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/grupoTesoreria}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox>
+                                    <Label text="{i18n>grupoContable}"/>
+                                    <Select selectedKey="{viewModel>/supplier/grupoContable}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/grupoContable}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>tipoImpuesto}"/>
+                                    <Select selectedKey="{viewModel>/supplier/tipoImpuesto}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/tipoImpuesto}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>cuentaAsociada}"/>
+                                    <Input value="{viewModel>/supplier/cuentaAsociada}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+
+                                <VBox>
+                                    <Label text="{i18n>esquema}"/>
+                                    <Select selectedKey="{viewModel>/supplier/esquema}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/esquema}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>moneda}"/>
+                                    <Select selectedKey="{viewModel>/supplier/moneda}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/moneda}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>condicionPago}"/>
+                                    <Select selectedKey="{viewModel>/supplier/condicionPago}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/condicionPago}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox>
+                                    <Label text="{i18n>debitoAutomatico}"/>
+                                    <CheckBox selected="{viewModel>/supplier/debitoAutomatico}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>estadoContribuyente}"/>
+                                    <Select selectedKey="{viewModel>/supplier/estadoContribuyente}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/estadoContribuyente}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>clasificador}"/>
+                                    <Select selectedKey="{viewModel>/supplier/clasificador}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/clasificador}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+
+                                <VBox>
+                                    <Label text="{i18n>fechaRegistro}"/>
+                                    <Text text="{viewModel>/supplier/fechaRegistro}"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>usuarioRegistro}"/>
+                                    <Text text="{viewModel>/supplier/usuarioRegistro}"/>
+                                </VBox>
+
+                            </l:Grid>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- ════════════════════════════════════════════
+                 SECCIÓN 3: Representante Legal (solo Jurídica)
+            ════════════════════════════════════════════ -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{i18n>seccionRepresentanteLegal}"
+                visible="{= ${viewModel>/supplierType} === 'juridica' }">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <l:Grid defaultSpan="L4 M6 S12" hSpacing="1" vSpacing="0.5" width="100%">
+
+                                <VBox>
+                                    <Label text="{i18n>tipoDocumento}"/>
+                                    <Select selectedKey="{viewModel>/supplier/repLegal/tipoDoc}"
+                                        enabled="{= ${viewModel>/mode} !== 'display' }"
+                                        items="{catalogs>/tipoDocumento}" width="100%">
+                                        <core:Item key="{catalogs>key}" text="{catalogs>text}"/>
+                                    </Select>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>nroDoc}"/>
+                                    <Input value="{viewModel>/supplier/repLegal/nroDoc}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>apellidoPaterno}"/>
+                                    <Input value="{viewModel>/supplier/repLegal/apellidoPaterno}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+
+                                <VBox>
+                                    <Label text="{i18n>apellidoMaterno}"/>
+                                    <Input value="{viewModel>/supplier/repLegal/apellidoMaterno}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>nombres}"/>
+                                    <Input value="{viewModel>/supplier/repLegal/nombres}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>cargo}"/>
+                                    <Input value="{viewModel>/supplier/repLegal/cargo}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+
+                                <VBox>
+                                    <Label text="{i18n>telefono}"/>
+                                    <Input value="{viewModel>/supplier/repLegal/telefono}"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{i18n>email}"/>
+                                    <Input value="{viewModel>/supplier/repLegal/email}" type="Email"
+                                        editable="{= ${viewModel>/mode} !== 'display' }" width="100%"/>
+                                </VBox>
+
+                            </l:Grid>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- ════════════════════════════════════════════
+                 SECCIÓN 4: Indicadores (máx. 3) — MultiInput con tokens
+            ════════════════════════════════════════════ -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{i18n>seccionIndicadores}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <VBox width="100%">
+                                <MultiInput
+                                    id="indicadoresMultiInput"
+                                    showSuggestion="true"
+                                    showValueHelp="{= ${viewModel>/mode} !== 'display'}"
+                                    editable="{= ${viewModel>/mode} !== 'display'}"
+                                    placeholder="{= ${viewModel>/mode} !== 'display' ? 'Escriba o haga clic en ️ para ver todos los indicadores' : ''}"
+                                    tokenUpdate=".onIndicadorTokenUpdate"
+                                    suggest=".onIndicadorSuggest"
+                                    focus=".onIndicadorFocus"
+                                    valueHelpRequest=".onIndicadorValueHelp"
+                                    width="100%"
+                                    class="sapUiSmallMarginBottom"/>
+                                <HBox alignItems="Center" class="sapUiTinyMarginTop"
+                                    visible="{= ${viewModel>/mode} !== 'display'}">
+                                    <core:Icon src="sap-icon://hint" color="Neutral" class="sapUiTinyMarginEnd"/>
+                                    <Text
+                                        text="{= 'Seleccionados: ' + ${viewModel>/indicadoresCountText} + ' \u2014 haga clic en el campo para ver todas las opciones disponibles'}"
+                                        class="claro-hint-text"/>
+                                </HBox>
+                            </VBox>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- ════════════════════════════════════════════
+                 SECCIÓN 5: Documento de Identidad — List con CustomListItem
+            ════════════════════════════════════════════ -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{i18n>seccionDocumentos}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <VBox width="100%">
+                                <OverflowToolbar>
+                                    <Title text="{i18n>seccionDocumentos}"/>
+                                    <ToolbarSpacer/>
+                                    <Button text="{i18n>agregarDocumento}" press=".onAddDocument"
+                                        visible="{= ${viewModel>/mode} !== 'display'}"
+                                        icon="sap-icon://add" type="Default"/>
+                                </OverflowToolbar>
+                                <List
+                                    items="{viewModel>/supplier/documentos}"
+                                    mode="None"
+                                    noDataText="{i18n>sinDocumentos}"
+                                    showSeparators="None">
+                                    <items>
+                                        <CustomListItem>
+                                            <content>
+                                                <HBox alignItems="Center" class="claro-doc-item">
+                                                    <core:Icon src="sap-icon://id-card" size="1.25rem"
+                                                        color="Neutral" class="sapUiMediumMarginBeginEnd sapUiSmallMarginTopBottom"/>
+                                                    <VBox width="30%" class="sapUiSmallMarginEnd">
+                                                        <Label text="{i18n>tipoDocumento}" design="Bold"
+                                                            visible="{= ${viewModel>/mode} !== 'display'}"/>
+                                                        <ComboBox
+                                                            selectedKey="{viewModel>documento}"
+                                                            enabled="{= ${viewModel>/mode} !== 'display'}"
+                                                            items="{path: 'viewModel>/documentosPorNacionalidad', templateShareable: false}"
+                                                            width="100%">
+                                                            <core:Item key="{viewModel>key}" text="{viewModel>text}"/>
+                                                        </ComboBox>
+                                                    </VBox>
+                                                    <VBox width="45%" class="sapUiSmallMarginEnd">
+                                                        <Label text="{i18n>numero}" design="Bold"
+                                                            visible="{= ${viewModel>/mode} !== 'display'}"/>
+                                                        <Input
+                                                            value="{viewModel>numero}"
+                                                            editable="{= ${viewModel>/mode} !== 'display'}"
+                                                            placeholder="Número de documento"
+                                                            width="100%"/>
+                                                    </VBox>
+                                                    <Button
+                                                        icon="sap-icon://delete"
+                                                        type="Transparent"
+                                                        press=".onDeleteDocument"
+                                                        visible="{= ${viewModel>/mode} !== 'display'}"/>
+                                                </HBox>
+                                            </content>
+                                        </CustomListItem>
+                                    </items>
+                                </List>
+                            </VBox>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+        </uxap:sections>
+    </uxap:ObjectPageLayout>
+</mvc:View>

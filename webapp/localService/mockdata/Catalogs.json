@@ -1,0 +1,181 @@
+{
+  "tipoProveedor": [
+    {"key": "natural", "text": "Persona natural"},
+    {"key": "juridica", "text": "Persona jurídica"}
+  ],
+  "tipoDocumento": [
+    {"key": "DNI", "text": "DNI"},
+    {"key": "RUC", "text": "RUC"},
+    {"key": "CE", "text": "Carné de Extranjería"},
+    {"key": "PASAPORTE", "text": "Pasaporte"}
+  ],
+  "tipoEmpresa": [
+    {"key": "empresa", "text": "Empresa"},
+    {"key": "persona", "text": "Persona"}
+  ],
+  "claseEmpresa": [
+    {"key": "privada", "text": "Privada"},
+    {"key": "publica", "text": "Pública"},
+    {"key": "mixta", "text": "Mixta"}
+  ],
+  "nacionalidad": [
+    {"key": "PE", "text": "Perú"},
+    {"key": "CO", "text": "Colombia"},
+    {"key": "EC", "text": "Ecuador"},
+    {"key": "BO", "text": "Bolivia"},
+    {"key": "CL", "text": "Chile"},
+    {"key": "AR", "text": "Argentina"},
+    {"key": "BR", "text": "Brasil"},
+    {"key": "US", "text": "Estados Unidos"},
+    {"key": "ES", "text": "España"}
+  ],
+  "departamento": [
+    {"key": "Lima", "text": "Lima"},
+    {"key": "Callao", "text": "Callao"},
+    {"key": "Arequipa", "text": "Arequipa"},
+    {"key": "Cusco", "text": "Cusco"},
+    {"key": "La Libertad", "text": "La Libertad"},
+    {"key": "Piura", "text": "Piura"}
+  ],
+  "provincia": [
+    {"key": "Lima", "text": "Lima", "departamento": "Lima"},
+    {"key": "Cañete", "text": "Cañete", "departamento": "Lima"},
+    {"key": "Callao", "text": "Callao", "departamento": "Callao"},
+    {"key": "Arequipa", "text": "Arequipa", "departamento": "Arequipa"}
+  ],
+  "distrito": [
+    {"key": "Lima", "text": "Lima", "provincia": "Lima"},
+    {"key": "San Isidro", "text": "San Isidro", "provincia": "Lima"},
+    {"key": "Miraflores", "text": "Miraflores", "provincia": "Lima"},
+    {"key": "San Borja", "text": "San Borja", "provincia": "Lima"},
+    {"key": "Surco", "text": "Santiago de Surco", "provincia": "Lima"},
+    {"key": "La Molina", "text": "La Molina", "provincia": "Lima"},
+    {"key": "Los Olivos", "text": "Los Olivos", "provincia": "Lima"},
+    {"key": "San Miguel", "text": "San Miguel", "provincia": "Lima"},
+    {"key": "Lince", "text": "Lince", "provincia": "Lima"},
+    {"key": "Breña", "text": "Breña", "provincia": "Lima"},
+    {"key": "La Victoria", "text": "La Victoria", "provincia": "Lima"},
+    {"key": "Surquillo", "text": "Surquillo", "provincia": "Lima"},
+    {"key": "Barranco", "text": "Barranco", "provincia": "Lima"},
+    {"key": "Independencia", "text": "Independencia", "provincia": "Lima"},
+    {"key": "Villa El Salvador", "text": "Villa El Salvador", "provincia": "Lima"},
+    {"key": "Villa Maria del Triunfo", "text": "Villa Maria del Triunfo", "provincia": "Lima"},
+    {"key": "Callao", "text": "Callao", "provincia": "Callao"},
+    {"key": "San Vicente", "text": "San Vicente", "provincia": "Cañete"}
+  ],
+  "grupoTesoreria": [
+    {"key": "GT01", "text": "Grupo Tesorería 01"},
+    {"key": "GT02", "text": "Grupo Tesorería 02"},
+    {"key": "GT03", "text": "Grupo Tesorería 03"}
+  ],
+  "grupoContable": [
+    {"key": "GC01", "text": "Grupo Contable 01"},
+    {"key": "GC02", "text": "Grupo Contable 02"},
+    {"key": "GC03", "text": "Grupo Contable 03"}
+  ],
+  "tipoImpuesto": [
+    {"key": "IGV", "text": "IGV"},
+    {"key": "ISC", "text": "ISC"},
+    {"key": "EXONERADO", "text": "Exonerado"}
+  ],
+  "esquema": [
+    {"key": "conIGV", "text": "Proveedor con IGV"},
+    {"key": "sinIGV", "text": "Proveedor sin IGV"}
+  ],
+  "debitoAutomatico": [
+    {"key": true, "text": "Sí"},
+    {"key": false, "text": "No"}
+  ],
+  "moneda": [
+    {"key": "PEN", "text": "Soles (PEN)"},
+    {"key": "USD", "text": "Dólares (USD)"}
+  ],
+  "condicionPago": [
+    {"key": "30D", "text": "30 días"},
+    {"key": "45D", "text": "45 días"},
+    {"key": "60D", "text": "60 días"},
+    {"key": "90D", "text": "90 días"}
+  ],
+  "estadoContribuyente": [
+    {"key": "Pre-Registrado", "text": "Pre-Registrado"},
+    {"key": "Activo",         "text": "Activo"},
+    {"key": "Suspendido",     "text": "Suspendido"},
+    {"key": "Bloqueado",      "text": "Bloqueado"}
+  ],
+  "clasificador": [
+    {"key": "estrategico", "text": "Proveedor estratégico"},
+    {"key": "regular", "text": "Proveedor regular"},
+    {"key": "ocasional", "text": "Proveedor ocasional"}
+  ],
+  "indicadores": [
+    {"key": "IND01", "text": "Proveedor estratégico"},
+    {"key": "IND02", "text": "Certificado ISO 9001"},
+    {"key": "IND03", "text": "Certificado ISO 14001"},
+    {"key": "IND04", "text": "Acreditación internacional"}
+  ],
+  "indicadoresRetencionDetraccion": [
+    {"key": "RET_0.6", "text": "Retención IGV 3% (Res. 037-2002)"},
+    {"key": "RET_1.5", "text": "Retención Renta 1ª cat. 5%"},
+    {"key": "RET_2", "text": "Retención Renta 2ª cat. 5%"},
+    {"key": "RET_4", "text": "Retención Renta 4ª cat. 8%"},
+    {"key": "RET_5", "text": "Retención Renta 5ª cat. escala progresiva"},
+    {"key": "DET_CONST", "text": "Detracción Construcción 4%"},
+    {"key": "DET_SERV", "text": "Detracción Servicios varios 12%"},
+    {"key": "DET_TRANS", "text": "Detracción Transporte de bienes 4%"},
+    {"key": "DET_ARREN", "text": "Detracción Arrendamiento de bienes 10%"},
+    {"key": "DET_MANT", "text": "Detracción Mantenimiento y reparación 9%"},
+    {"key": "DET_CONSUL", "text": "Detracción Consultoría y asistencia técnica 12%"},
+    {"key": "DET_LIMPIEZA", "text": "Detracción Limpieza espacios 9%"},
+    {"key": "DET_PUBLI", "text": "Detracción Publicidad 10%"},
+    {"key": "PERC_IGV", "text": "Percepción IGV 2% (Res. 058-2006)"},
+    {"key": "EXONERADO", "text": "Exonerado de retención / detracción"}
+  ],
+  "documentosPorNacionalidad": {
+    "juridica": {
+      "PE":  [{"key": "RUC", "text": "RUC"}],
+      "CO":  [{"key": "NIT", "text": "NIT"}, {"key": "RUT", "text": "RUT"}],
+      "EC":  [{"key": "RUC_EC", "text": "RUC Ecuador"}, {"key": "CI_EC", "text": "Cédula Empresa"}],
+      "BO":  [{"key": "NIT_BO", "text": "NIT Bolivia"}],
+      "CL":  [{"key": "RUT_CL", "text": "RUT Chile"}],
+      "AR":  [{"key": "CUIT", "text": "CUIT"}],
+      "BR":  [{"key": "CNPJ", "text": "CNPJ"}, {"key": "CPF", "text": "CPF"}],
+      "US":  [{"key": "EIN", "text": "EIN (Employer ID)"}],
+      "ES":  [{"key": "CIF", "text": "CIF"}, {"key": "NIF", "text": "NIF"}],
+      "DEFAULT": [{"key": "OTRO", "text": "Otro"}]
+    },
+    "natural": {
+      "PE":  [{"key": "DNI", "text": "DNI"}, {"key": "CE", "text": "Carné de Extranjería"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "CO":  [{"key": "CC", "text": "Cédula de Ciudadanía"}, {"key": "CE_CO", "text": "Cédula Extranjería"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "EC":  [{"key": "CI_EC", "text": "Cédula de Identidad"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "BO":  [{"key": "CI_BO", "text": "Cédula de Identidad"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "CL":  [{"key": "RUN", "text": "RUN"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "AR":  [{"key": "DNI_AR", "text": "DNI Argentina"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "BR":  [{"key": "CPF", "text": "CPF"}, {"key": "RG", "text": "RG"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "US":  [{"key": "SSN", "text": "Social Security Number"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "ES":  [{"key": "NIF", "text": "NIF"}, {"key": "NIE", "text": "NIE"}, {"key": "PASAPORTE", "text": "Pasaporte"}],
+      "DEFAULT": [{"key": "PASAPORTE", "text": "Pasaporte"}, {"key": "OTRO", "text": "Otro"}]
+    }
+  },
+  "tipoViaDireccion": [
+    {"key": "AV", "text": "Avenida"},
+    {"key": "CA", "text": "Calle"},
+    {"key": "JR", "text": "Jirón"},
+    {"key": "PJ", "text": "Pasaje"},
+    {"key": "PQ", "text": "Parque"},
+    {"key": "URB", "text": "Urbanización"},
+    {"key": "OTRO", "text": "Otro"}
+  ],
+  "nacionalidadReporte": [
+    {"key": "nacional", "text": "Nacional"},
+    {"key": "extranjero", "text": "Extranjero"}
+  ],
+  "tipoEmpresaReporte": [
+    {"key": "", "text": "Todas"},
+    {"key": "empresa", "text": "Empresa"},
+    {"key": "persona", "text": "Persona"}
+  ],
+  "claseEmpresaReporte": [
+    {"key": "nacional", "text": "Nacional"},
+    {"key": "extranjero", "text": "Extranjero"}
+  ]
+}

@@ -211,7 +211,7 @@
                                                     </HBox>
                                                 </VBox>
                                                 <!-- Columna derecha: acciones -->
-                                                <VBox justifyContent="End" alignItems="End" class="claro-mobile-card-actions">
+                                                <VBox justifyContent="Center" alignItems="Center" class="claro-mobile-card-actions">
                                                     <Button icon="sap-icon://edit" tooltip="Editar" press=".onEditNatural" type="Transparent"/>
                                                     <Button icon="sap-icon://delete" tooltip="Eliminar" press=".onDeleteNatural" type="Transparent"/>
                                                 </VBox>
@@ -406,7 +406,7 @@
                                                     </HBox>
                                                 </VBox>
                                                 <!-- Columna derecha: acciones -->
-                                                <VBox justifyContent="End" alignItems="End" class="claro-mobile-card-actions">
+                                                <VBox justifyContent="Center" alignItems="Center" class="claro-mobile-card-actions">
                                                     <Button icon="sap-icon://edit" tooltip="Editar" press=".onEditJuridica" type="Transparent"/>
                                                     <Button icon="sap-icon://delete" tooltip="Eliminar" press=".onDeleteJuridica" type="Transparent"/>
                                                 </VBox>

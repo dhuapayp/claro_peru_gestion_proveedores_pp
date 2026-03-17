@@ -368,12 +368,7 @@ sap.ui.define([
         },
 
         _doCancelNav(sMode, oViewModel) {
-            if (sMode === "edit") {
-                const sOriginalId = oViewModel.getProperty("/originalSupplierId");
-                this._loadSupplier(sOriginalId, "display");
-            } else {
-                this.onNavBack();
-            }
+            this.getRouter().navTo("main");
         },
 
         onAddReference() {

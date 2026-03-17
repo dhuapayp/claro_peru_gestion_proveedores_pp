@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "nroDoc": "20111222333",
+    "razonSocial": "EMPRESA EJEMPLO UNO SAC",
+    "correoContacto": "contacto@ejemplo1.com",
+    "estado": "Invitado",
+    "fechaCreacion": "2026-01-20",
+    "fechaVigencia": "2026-01-27"
+  },
+  {
+    "id": "2",
+    "nroDoc": "20444555666",
+    "razonSocial": "SERVICIOS GENERALES DOS SRL",
+    "correoContacto": "info@servicios2.pe",
+    "estado": "Invitado",
+    "fechaCreacion": "2026-01-22",
+    "fechaVigencia": "2026-01-29"
+  },
+  {
+    "id": "3",
+    "nroDoc": "20777888999",
+    "razonSocial": "CONSULTORIA EMPRESARIAL TRES EIRL",
+    "correoContacto": "contacto@consultoria3.com.pe",
+    "estado": "Confirmado",
+    "fechaCreacion": "2026-01-10",
+    "fechaVigencia": "2026-01-17"
+  },
+  {
+    "id": "4",
+    "nroDoc": "20100200300",
+    "razonSocial": "IMPORTACIONES CUATRO SA",
+    "correoContacto": "compras@importaciones4.pe",
+    "estado": "Invitado",
+    "fechaCreacion": "2026-01-23",
+    "fechaVigencia": "2026-01-30"
+  },
+  {
+    "id": "5",
+    "nroDoc": "20400500600",
+    "razonSocial": "DISTRIBUIDORA CINCO SRL",
+    "correoContacto": "ventas@distribuidora5.com",
+    "estado": "Confirmado",
+    "fechaCreacion": "2026-01-15",
+    "fechaVigencia": "2026-01-22"
+  },
+  {
+    "id": "6",
+    "nroDoc": "20700800900",
+    "razonSocial": "LOGISTICA SEIS SAC",
+    "correoContacto": "operaciones@logistica6.pe",
+    "estado": "Invitado",
+    "fechaCreacion": "2026-01-24",
+    "fechaVigencia": "2026-01-31"
+  },
+  {
+    "id": "7",
+    "nroDoc": "20110220330",
+    "razonSocial": "CONSTRUCTORA SIETE EIRL",
+    "correoContacto": "proyectos@constructora7.com.pe",
+    "estado": "Invitado",
+    "fechaCreacion": "2026-01-25",
+    "fechaVigencia": "2026-02-01"
+  },
+  {
+    "id": "8",
+    "nroDoc": "20440550660",
+    "razonSocial": "TECNOLOGIA OCHO SA",
+    "correoContacto": "soporte@tecnologia8.pe",
+    "estado": "Confirmado",
+    "fechaCreacion": "2026-01-12",
+    "fechaVigencia": "2026-01-19"
+  }
+]

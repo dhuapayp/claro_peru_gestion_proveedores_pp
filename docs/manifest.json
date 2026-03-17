@@ -1,0 +1,146 @@
+{
+  "_version": "1.81.0",
+  "sap.app": {
+    "id": "claro.com.gestionproveedores",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.20.1",
+      "toolsId": "99fac124-9b65-4c77-b0ff-35eaad767bb5"
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "Proveedor-manage": {
+          "semanticObject": "Proveedor",
+          "action": "manage",
+          "title": "{{Proveedor-manage.flpTitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.144.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.uxap": {},
+        "sap.ui.export": {},
+        "sap.ui.table": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "claro.com.gestionproveedores.i18n.i18n"
+        }
+      },
+      "suppliers": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "localService/mockdata/Suppliers.json"
+      },
+      "catalogs": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "localService/mockdata/Catalogs.json"
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "claro.com.gestionproveedores.view",
+        "async": true,
+        "viewPath": "claro.com.gestionproveedores.view"
+      },
+      "routes": [
+        {
+          "name": "main",
+          "pattern": "",
+          "target": "main"
+        },
+        {
+          "name": "supplierCreate",
+          "pattern": "supplier/create/{tipoPersona}",
+          "target": "supplierCreate"
+        },
+        {
+          "name": "supplierDetail",
+          "pattern": "supplier/{supplierId}/{mode}",
+          "target": "supplierDetail"
+        }
+      ],
+      "targets": {
+        "main": {
+          "id": "main",
+          "name": "Main",
+          "level": 1
+        },
+        "supplierDetail": {
+          "id": "supplierDetail",
+          "name": "SupplierDetail",
+          "level": 2
+        },
+        "supplierCreate": {
+          "id": "supplierCreate",
+          "name": "SupplierDetail",
+          "level": 2
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "claro.com.gestionproveedores.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "clarocomgestionproveedores"
+  }
+}

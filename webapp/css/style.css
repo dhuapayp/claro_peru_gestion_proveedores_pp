@@ -1,5 +1,21 @@
 /* Enter your custom styles here */
 
+/* ═══════════════════════════════════════════════════════════════
+   MAIN PAGE — padding simétrico izquierda/derecha + título centrado
+   ═══════════════════════════════════════════════════════════════ */
+/* Padding derecho simétrico al margen izquierdo del sapUiResponsiveMargin */
+#mainPage-cont {
+    padding-right: 1rem;
+    padding-left: 1rem;
+    box-sizing: border-box;
+}
+/* El KPI bar ocupa todo el ancho — compensar el padding del contenedor */
+#mainPage-cont .claro-kpi-bar {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    width: calc(100% + 2rem);
+}
+
 /* ── Separador vertical en cabecera de detalle ── */
 .claro-header-separator {
     width: 1px;

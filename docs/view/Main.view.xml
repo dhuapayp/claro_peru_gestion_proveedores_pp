@@ -9,6 +9,7 @@
     <Page
         id="mainPage"
         title="{i18n>mainTitle}"
+        titleAlignment="Center"
         showNavButton="false">
 
         <subHeader>
@@ -65,7 +66,7 @@
                 id="reportTabBar"
                 select=".onReportTabSelect"
                 stretchContentHeight="false"
-                class="sapUiResponsiveMargin">
+                class="sapUiTinyMarginTop">
 
                 <items>
 
